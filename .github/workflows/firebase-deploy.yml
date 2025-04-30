@@ -27,12 +27,7 @@ jobs:
       - name: Install Firebase Tools
         run: npm install -g firebase-tools@latest
       
-      - name: Deploy to Firebase
+      - name: Deploy Functions to Firebase
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
-          channelId: live
-          targets: 'functions'
+        run: |
+          firebase deploy --only functions --token ${{ secrets.FIREBASE_DEPLOY_TOKEN }}

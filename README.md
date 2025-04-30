@@ -20,7 +20,7 @@ API para el sistema de gestión de tareas desarrollado con Firebase Functions.
 
 1. Clona el repositorio:
 ```bash
-git clone https://github.com/tu-usuario/task-manager-api.git
+git clone https://github.com/pcornelio/atom.task-manager.api.git
 cd task-manager-api
 ```
 
