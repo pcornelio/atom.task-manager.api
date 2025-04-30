@@ -14,6 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      # Cambiar al directorio donde se encuentra el package.json
+      - name: Change to the correct directory
+        run: cd path/to/your/frontend  # Cambia esto a la ruta correcta del package.json
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -21,10 +25,10 @@ jobs:
           
       - name: Install Dependencies
         run: npm install
-        
+      
       - name: Run Tests
         run: npm test
-        
+      
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -32,4 +36,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
-          channelId: live 
+          channelId: live
