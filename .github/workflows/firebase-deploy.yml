@@ -27,7 +27,14 @@ jobs:
       - name: Install Firebase Tools
         run: npm install -g firebase-tools@latest
       
+      - name: Install Firebase Tools
+        run: npm install -g firebase-tools@latest
+
+      - name: Set up Google Application Credentials
+        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/firebase-service-account.json
+
       - name: Deploy Functions to Firebase
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          firebase deploy --only functions --token ${{ secrets.FIREBASE_DEPLOY_TOKEN }}
+          export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
+          firebase deploy --only functions
