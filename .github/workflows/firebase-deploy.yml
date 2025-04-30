@@ -14,9 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Cambiar al directorio donde se encuentra el package.json
       - name: Change to the correct directory
-        run: cd path/to/your/frontend  # Cambia esto a la ruta correcta del package.json
+        run: cd functions
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
