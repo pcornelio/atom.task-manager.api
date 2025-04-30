@@ -14,19 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Change to the correct directory
-        run: cd ./functions
-
-      - name: List files for debugging
-        run: ls -la
-      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           
       - name: Install Dependencies
-        run: npm install
+        run: |
+          cd functions 
+          npm install
       
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
