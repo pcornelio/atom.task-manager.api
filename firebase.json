@@ -21,10 +21,7 @@
   },
   "emulators": {
     "firestore": {
-      "port": 8080,
-      "logging": {
-        "rules": "debug"
-      }
+      "port": 8080
     },
     "ui": {
       "enabled": true,
