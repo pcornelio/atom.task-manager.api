@@ -1,9 +1,15 @@
+export enum TaskStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED'
+}
+
 export interface Task {
   id: string;
   title: string;
   description: string;
   createdAt: Date;
-  completed: boolean;
+  status: TaskStatus;
   userId: string;
 }
 
@@ -12,7 +18,7 @@ export class TaskEntity implements Task {
   title: string;
   description: string;
   createdAt: Date;
-  completed: boolean;
+  status: TaskStatus;
   userId: string;
 
   constructor(task: Partial<Task>) {
@@ -20,7 +26,7 @@ export class TaskEntity implements Task {
     this.title = task.title || '';
     this.description = task.description || '';
     this.createdAt = task.createdAt || new Date();
-    this.completed = task.completed || false;
+    this.status = task.status || TaskStatus.PENDING;
     this.userId = task.userId || '';
   }
 
@@ -30,7 +36,7 @@ export class TaskEntity implements Task {
       title: this.title,
       description: this.description,
       createdAt: this.createdAt,
-      completed: this.completed,
+      status: this.status,
       userId: this.userId
     };
   }

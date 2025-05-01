@@ -3,14 +3,17 @@ import { CreateTaskUseCase } from '../../application/useCases/task/CreateTaskUse
 import { GetTasksUseCase } from '../../application/useCases/task/GetTasksUseCase';
 import { UpdateTaskUseCase } from '../../application/useCases/task/UpdateTaskUseCase';
 import { DeleteTaskUseCase } from '../../application/useCases/task/DeleteTaskUseCase';
+import { UpdateTaskStatusUseCase } from '../../application/useCases/task/UpdateTaskStatusUseCase';
 import { FirestoreTaskRepository } from '../repositories/FirestoreTaskRepository';
 import { LoggerService } from '../services/LoggerService';
+import { TaskStatus } from '../../domain/entities/Task';
 
 export class TaskController {
   private createTaskUseCase: CreateTaskUseCase;
   private getTasksUseCase: GetTasksUseCase;
   private updateTaskUseCase: UpdateTaskUseCase;
   private deleteTaskUseCase: DeleteTaskUseCase;
+  private updateTaskStatusUseCase: UpdateTaskStatusUseCase;
 
   constructor() {
     const taskRepository = new FirestoreTaskRepository();
@@ -18,6 +21,7 @@ export class TaskController {
     this.getTasksUseCase = new GetTasksUseCase(taskRepository);
     this.updateTaskUseCase = new UpdateTaskUseCase(taskRepository);
     this.deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
+    this.updateTaskStatusUseCase = new UpdateTaskStatusUseCase(taskRepository);
   }
 
   async createTask(req: Request, res: Response): Promise<void> {
@@ -80,6 +84,37 @@ export class TaskController {
     } catch (error) {
       LoggerService.error('TaskController: Error al eliminar tarea', error);
       res.status(500).json({ error: 'Error deleting task' });
+    }
+  }
+
+  async updateTaskStatus(req: Request, res: Response): Promise<void> {
+    try {
+      if (!req.user?.id) {
+        res.status(401).json({ error: 'No autorizado' });
+        return;
+      }
+
+      const { status } = req.body;
+      if (!Object.values(TaskStatus).includes(status)) {
+        res.status(400).json({ error: 'Estado de tarea inválido' });
+        return;
+      }
+
+      const updatedTask = await this.updateTaskStatusUseCase.execute(
+        req.params.id,
+        status,
+        req.user.id
+      );
+      res.status(200).json(updatedTask);
+    } catch (error: any) {
+      LoggerService.error('TaskController: Error al actualizar estado de tarea', error);
+      if (error.message === 'Task not found') {
+        res.status(404).json({ error: 'Tarea no encontrada' });
+      } else if (error.message.includes('Unauthorized')) {
+        res.status(403).json({ error: 'No tienes permiso para modificar esta tarea' });
+      } else {
+        res.status(500).json({ error: 'Error al actualizar el estado de la tarea' });
+      }
     }
   }
 } 
